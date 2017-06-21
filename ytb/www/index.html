@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <!--
+        Customize the content security policy in the meta tag below as needed. Add 'unsafe-inline' to default-src to enable inline JavaScript.
+        For details, see http://go.microsoft.com/fwlink/?LinkID=617521
+    -->
+    <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">-->
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <title>ytb</title>
+</head>
+<body>
+    <div class="app">
+        <img id="thumbnail" class="togglePlay" />
+        <input hidden type="range" id="seekbar">
+        <h1 id="status">Apache Cordova</h1>
+        <div id="title"></div>
+        <input hidden type="text" id="url" placeholder="youtu.be/e4jr0C-clCI" />
+        <input hidden type="button" id="search" value="SUCC" />
+        <!--<input hidden type="button" id="play" class="togglePlay" value="Pause" />-->
+        <input hidden type="button" id="next" value="SUCC LATER" />
+        <div id="succlist"></div>
+        <div id="presucc"></div>
+    </div>
+    <div id="adds" data-ripple class="cell bg-primary-darker">
+
+    </div>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="scripts/platformOverrides.js"></script>
+    <script src="scripts/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="scripts/index.js"></script>
+
+    <style>
+        #seekbar {
+            width: 96%;
+        }
+
+        #status {
+            color: antiqueWhite;
+            text-align: right;
+            padding-right: 2%;
+        }
+
+        #title {
+            color: antiqueWhite;
+            font-size: 16px;
+            font-weight: normal;
+            margin: .5em;
+            padding: 0px;
+            text-align: left;
+            text-transform: none;
+        }
+
+        #search {
+            width: 48%;
+            height: 56px;
+            font-size: large;
+        }
+
+        #play {
+            width: 48%;
+            height: 56px;
+            font-size: large;
+            margin-top: .5em;
+        }
+
+        #next {
+            width: 48%;
+            height: 56px;
+            font-size: large;
+            margin-top: .5em;
+        }
+
+        #presucc {
+            color: antiqueWhite;
+            font-size: 20px;
+            font-weight: normal;
+            margin: 0px;
+            padding: 0px;
+            text-align: center;
+        }
+
+        #succlist {
+            color: antiqueWhite;
+            font-size: 16px;
+            font-weight: normal;
+            margin: .5em;
+            padding: 0px;
+            text-align: left;
+            text-transform: none;
+        }
+
+        #thumbnail {
+            width: 100%;
+            background: url(https://img.youtube.com/vi/7LEmer7wwHI/0.jpg) no-repeat center top;
+        }
+
+        /*.ripple {
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: yellow;
+            opacity: 0.2;
+            transform: scale(0);
+            position: absolute;
+            opacity: 1;
+        }
+
+        .rippleEffect {
+            animation: rippleDrop .5s  linear;
+        }
+
+        @keyframes rippleDrop {
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }*/
+
+        #adds {
+            width: 100%;
+            height: 57%;
+            position: absolute;
+            bottom: 0;
+            z-index: 1;
+        }
+
+        .ripple {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            overflow: hidden;
+            transform: translateZ(0);
+            border-radius: inherit;
+            pointer-events: none;
+            /*animation: ripple-shadow 0.4s forwards;*/
+        }
+
+        .rippleWave {
+            backface-visibility: hidden;
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0.7);
+            background: rgba(255,255,255, 1);
+            opacity: 0.7;
+            animation: ripple 1.5s forwards;
+        }
+
+        @keyframes ripple-shadow {
+            0% {
+                box-shadow: 0 0 0 rgba(0,0,0,0.0);
+            }
+
+            20% {
+                box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            }
+
+            100% {
+                box-shadow: 0 0 0 rgba(0,0,0,0.0);
+            }
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(24);
+                opacity: 0;
+            }
+        }
+    </style>
+</body>
+</html>
