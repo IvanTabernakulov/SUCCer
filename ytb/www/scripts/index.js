@@ -225,7 +225,7 @@ function onDeviceReady() {
 
     function preSUCC(newSUCC) {
         var url = 'http://www.youtubeinmp3.com/fetch/?format=JSON&video=' + newSUCC.key;
-        $('#next').val('pre-SUCCing...')
+        $('#next').val('pre-SUCCing...');
 
         $.ajax({
             url: url,
@@ -234,13 +234,30 @@ function onDeviceReady() {
             crossDomain: true,
             success: function (result) {
                 if (result[0] === '<') {
+                    //noUseToPreSUCC = false;
                     var url = result.substring(43, result.length - 3);
                     $.get(url, function (data) {
                         var link = $(data).find('#download').attr('href');
-                        $.get('http://www.youtubeinmp3.com/' + link, function (data) {
-                        });
+                        if (link === undefined) {
+                            newSUCC.value = 'Too long, wont SUCC';
+                            updateSUCClist();
+                            setTimeout(function () {
+                                succlist.splice($.inArray(newSUCC, succlist), 1);
+                                $('#next').val('SUCC LATER');
+                                updateSUCClist();
+                            }, 3000); 
+                            //noUseToPreSUCC = true;
+                        }
+                        else {
+                            $.get('http://www.youtubeinmp3.com/' + link, function (data) {
+                                setTimeout(function () { preSUCC(newSUCC); }, 5000);
+                            });                            
+                        }
                     });
-                    setTimeout(function () { preSUCC(url) }, 5000);
+
+                    //setTimeout(function () {
+                    //    if (!noUseToPreSUCC) preSUCC(newSUCC);
+                    //}, 3000);                    
                 }
                 else {
                     var res = JSON.parse(result);
@@ -255,7 +272,7 @@ function onDeviceReady() {
                 }
             },
             error: function (request, error) {
-                alert('Error ' + error);
+                alert('Error ' + request.responseText);
             }
         });
     }
