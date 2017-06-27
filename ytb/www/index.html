@@ -22,11 +22,16 @@
         <h1 id="status">Apache Cordova</h1>
         <div id="title"></div>
         <input hidden type="text" id="url" placeholder="youtu.be/e4jr0C-clCI" />
-        <input hidden type="button" id="search" value="SUCC" />
-        <!--<input hidden type="button" id="play" class="togglePlay" value="Pause" />-->
+        <input hidden type="button" id="search" value="SUCC" />        
         <input hidden type="button" id="next" value="SUCC LATER" />
+        <input hidden type="button" id="searchOpen" value="🔍" />
         <div id="succlist"></div>
         <div id="presucc"></div>
+
+    </div>
+    <div hidden id="youtubeSearch">
+        <input type="text" id="searchInput" placeholder="some gay shit" />
+        <input type="button" id="searchButton" value="🔍" />
     </div>
     <div id="adds" data-ripple class="cell bg-primary-darker">
 
@@ -64,16 +69,23 @@
         }
 
         #play {
-            width: 48%;
+            width: 35%;
             height: 56px;
             font-size: large;
             margin-top: .5em;
         }
 
         #next {
-            width: 48%;
+            width: 35%;
             height: 56px;
             font-size: large;
+            margin-top: .5em;
+        }
+
+        #searchOpen {
+            width: 13%;
+            height: 56px;
+            font-size: 1.6em;
             margin-top: .5em;
         }
 
@@ -100,28 +112,6 @@
             width: 100%;
             background: url(https://img.youtube.com/vi/7LEmer7wwHI/0.jpg) no-repeat center top;
         }
-
-        /*.ripple {
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: yellow;
-            opacity: 0.2;
-            transform: scale(0);
-            position: absolute;
-            opacity: 1;
-        }
-
-        .rippleEffect {
-            animation: rippleDrop .5s  linear;
-        }
-
-        @keyframes rippleDrop {
-            100% {
-                transform: scale(2);
-                opacity: 0;
-            }
-        }*/
 
         #adds {
             width: 100%;
@@ -174,6 +164,59 @@
                 opacity: 0;
             }
         }
+
+        #youtubeSearch {
+            background-color: rgba(0, 0, 0, 0.90);
+            position: absolute;
+            height: 96%;
+            width: 96%;
+            top: 2%;
+            left: 2%;
+            box-shadow: 0 0 5em rgb(168, 157, 157);
+            z-index: 10;
+            overflow: scroll;
+        }
+
+        #searchInput {
+            width: 78%;
+            height: 2.5em;
+            font-size: large;
+            padding-top: .25em;
+            margin-top: .2em;
+            margin-left: .2em;
+        }
+
+        #searchButton {
+            width: 18%;
+            height: 3em;
+            font-size: large;
+        }
+
+        .foundItem {
+            padding-left: .5em;
+            padding-right: .5em;
+            height: 8em;
+            overflow: hidden;
+            border-bottom: 1px solid rgb(137, 135, 128);
+        }
+
+            .foundItem img {
+                width: 36.5%;
+                display: inline;
+                float: right;
+            }
+
+            .foundItem p {
+                width: 63%;
+                display: inline;
+                float: left;
+                font-size: 1.3em;
+                text-transform: none;
+                color: white;
+                margin-top: .5em;
+                margin-bottom: .5em;
+                overflow: auto;
+            }
     </style>
 </body>
 </html>

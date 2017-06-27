@@ -8,17 +8,20 @@ var aboutToPlay = '';
 var i = 0;
 var myMedia;
 var holdTheResume = false;
+var loadingSearchPage = false;
+var nextPageToken = '';
+var searchQ = '';
 
 document.addEventListener('deviceready', onDeviceReady, false);
 function onDeviceReady() {
     //audioUrl = 'https://www.youtubeinmp3.com/fetch/?video=https://youtu.be/e4jr0C-clCI';
-    
+
     $('#search').show();
-    //$('#url').show();
     $('#play').show();
     $('#next').show();
+    $('#searchOpen').show();
 
-    doEverythingFuckingPossibleToSUCCThis('youtu.be/fV3Fu5csdcA');
+    doEverythingFuckingPossibleToSUCCThis('youtu.be/rqqhjF0izmg');
 
     $('#search').click(function () {
         url = $('#url').val();
@@ -49,7 +52,7 @@ function onDeviceReady() {
         }
     }
 
-    $('#next').click(function () {        
+    $('#next').click(function () {
         var newUrl = $('#url').val();
 
         if (newUrl.indexOf('youtube.com/') === -1 && newUrl.indexOf('youtu.be/') === -1) {
@@ -245,13 +248,13 @@ function onDeviceReady() {
                                 succlist.splice($.inArray(newSUCC, succlist), 1);
                                 $('#next').val('SUCC LATER');
                                 updateSUCClist();
-                            }, 3000); 
+                            }, 3000);
                             //noUseToPreSUCC = true;
                         }
                         else {
                             $.get('http://www.youtubeinmp3.com/' + link, function (data) {
                                 setTimeout(function () { preSUCC(newSUCC); }, 5000);
-                            });                            
+                            });
                         }
                     });
 
@@ -267,7 +270,7 @@ function onDeviceReady() {
                         $('#presucc').html('');
                         $('#next').val('SUCC LATER');
                     }, 1500);
-                   
+
                     $('#next').val(' ↓  ↓  ↓ ');
                 }
             },
@@ -329,7 +332,7 @@ function onDeviceReady() {
 
         MusicControls.subscribe(events);
         MusicControls.listen();
-    }    
+    }
 
     function secondsToTime(sec) {
         var date = new Date(0, 0);
@@ -416,12 +419,12 @@ function onDeviceReady() {
         updateTitle(data.intent.extras["android.intent.extra.TEXT"]);
 
         holdTheResume = true;
-        setTimeout(function () { holdTheResume = false }, 2000);
+        //setTimeout(function () { holdTheResume = false }, 2000);
         //doEverythingFuckingPossibleToSUCCThis(data.intent.extras["android.intent.extra.TEXT"]);
     });
 
     document.addEventListener("resume", onResume, false);
-    function onResume() {
+    function onResume(e) {
         if (holdTheResume) return;
         cordova.plugins.clipboard.paste(function (text) {
             if (text.indexOf('youtube.com/') === -1 && text.indexOf('youtu.be') === -1) {
@@ -433,13 +436,23 @@ function onDeviceReady() {
         });
     }
 
+    document.addEventListener("pause", onPause, false);
+    function onPause() {
+        holdTheResume = false;
+    }
+
+    document.addEventListener("backbutton", onBack, false);
+    function onBack() {
+        $('#youtubeSearch').hide();
+    }
+
     function updateTitle(url) {
         if (url.indexOf('youtube.com/') === -1 && url.indexOf('youtu.be') === -1) {
             $('#title').html('');
             return;
         }
         var videoId = url.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/)[1];
-                
+
         $.get('http://youtube.com/get_video_info?video_id=' + videoId, function (data) {
             if (data.length > 1000) {
                 var titleIndex = data.indexOf('&title=') + 7;
@@ -453,5 +466,75 @@ function onDeviceReady() {
                 $('#title').html('Ready to SUCC: ' + url);
             }
         });
+    }
+
+    $('#searchOpen').click(function () {
+        $('#youtubeSearch').show();
+    });
+    
+    $('#searchButton').click(function () {
+        var q = $('#searchInput').val();
+        if (q === '') return;
+
+        nextPageToken = '';
+        searchQ = q;
+        $('.foundItem').remove();
+
+        getSearchResults();
+    });
+
+    $("#searchInput").keypress(function (e) {
+        if (e.keyCode === 13) {
+            $('#searchButton').click();
+            $("#searchInput").blur();
+        }
+    });
+
+    $('#youtubeSearch').scroll(function () {
+        if (!loadingSearchPage) {
+            var oneItemHeight = $('.foundItem').first().height() + 1;
+            var itemCount = $('.foundItem').length;
+
+            if ($('#youtubeSearch').scrollTop() >= itemCount * oneItemHeight - $(window).height()) {
+                loadingSearchPage = true;                
+                getSearchResults();
+            }
+        }
+    });
+
+    function getSearchResults() {
+        $.get('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&type=video&q=' + searchQ + '&key=AIzaSyAZ_I4jDTh7rO7XU3EDxavkaAOzeo9_EVk&pageToken=' + nextPageToken, function (data) {
+            var videos = data.items;
+            nextPageToken = data.nextPageToken;
+
+            loadingSearchPage = false;
+            $('#youtubeSearch .spinner').remove();
+
+            for (var i = 0; i < videos.length; i++) {
+                var shelf =
+                    $('<div class="foundItem" videoID="'
+                        + videos[i].id.videoId +
+                        '"><img src= "'
+                        + videos[i].snippet.thumbnails.default.url +
+                        '" class="foundItemImage" /><p>'
+                        + videos[i].snippet.title +
+                        '</p>\</div>');
+
+                shelf.click(function () {
+                    var videoId = $(this).attr('videoId');
+                    $('#title').html('Ready to SUCC: ' + $(this).find('p').text());
+                    $('#url').val('https://youtu.be/' + videoId);
+                    $('#youtubeSearch').hide();
+                })
+
+                $('#youtubeSearch').append(shelf);
+            }
+
+            $('#youtubeSearch').append('<div class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>');
+        });
+    }
+
+    function halert(message) {
+        alert(message);
     }
 }
